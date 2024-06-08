@@ -396,18 +396,39 @@ function INSTALL_RTORRENT_APT_R96 {
 
 	
 	echo "${CYAN}Install xmlrpc${NORMAL}"
-	apt-get install libxmlrpc-core-c3
+	svn checkout svn://svn.code.sf.net/p/xmlrpc-c/code/super_stable
+    cd super_stable
+    ./configure --prefix=/usr --disable-cplusplus --disable-wininet-client --disable-libwww-client
+    make -j$(nproc) CFLAGS="-O3"
+    make install
+    git clone https://github.com/shadowsocks/libudns
+    cd libudns
+    ./autogen.sh
+    ./configure --prefix=/usr
+    make -j$(nproc) CFLAGS="-O3 -fPIC"
+    make -j$(nproc) install
 	CHECKLASTRC
 	
 	
 	# Download and install libtorrent
  	echo "${CYAN}Install libtorrent ${NORMAL}" 	
-	apt-get -y install libtorrent19
+	#apt-get -y install libtorrent19
+    git clone https://github.com/stickz/rtorrent.git
+    cd libtorrent
+    ./autogen.sh
+    ./configure --prefix=/usr --enable-aligned
+    make -j$(nproc) CXXFLAGS="-O3"
+    make install
 	CHECKLASTRC
 
 	# Download and install rtorrent
 	echo "${CYAN}Install rtorrent${NORMAL}" 	
-	apt-get -y install rtorrent
+	git clone https://github.com/stickz/rtorrent.git
+    cd rtorrent
+    ./autogen.sh
+    ./configure --prefix=/usr --with-xmlrpc-c
+    make -j$(nproc) CXXFLAGS="-O3"
+    make install
 	CHECKLASTRC
 
 	ldconfig
@@ -555,10 +576,7 @@ function INSTALL_RUTORRENT {
 	# Installing rutorrent.
 	echo "${CYAN}Installing rutorrent${NORMAL}"
 	echo "${YELLOW}Downloading package${NORMAL}"
-	curl -L https://github.com/Novik/ruTorrent/archive/refs/tags/v4.2.6.zip -o rutorrent.zip
-	CHECKLASTRC
-	echo "${YELLOW}Unpacking${NORMAL}"
-	unzip -qq rutorrent.zip
+	git clone https://github.com/Novik/ruTorrent.git
 	CHECKLASTRC
 	echo "${YELLOW}Renaming${NORMAL}"
 	mv ruTorrent-* rutorrent
