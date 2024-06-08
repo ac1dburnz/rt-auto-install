@@ -230,7 +230,7 @@ function APACHE_UTILS {
 		if [[ $REPLY =~ [Yy]$ ]]; then
 			clear
 			apt-get update
-			apt-get -y install apache2-utils unzip curl wget
+			apt-get -y install apache2-utils unzip curl wget php-xml
 		else
 			clear
 			exit
